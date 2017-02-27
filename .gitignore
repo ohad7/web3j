@@ -2,6 +2,11 @@
 ### Java template
 *.class
 
+.classpath
+.project
+.settings/
+bin/
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
