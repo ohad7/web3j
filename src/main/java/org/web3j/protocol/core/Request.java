@@ -81,8 +81,11 @@ public class Request<S, T extends Response> {
                     try {
                         subscriber.onNext(sendAsync().get());
                     } catch (InterruptedException e) {
+                      System.err.println("Interrupted Error :" + e);
                         subscriber.onError(e);
                     } catch (ExecutionException e) {
+                      System.err.println("ExecutionException Error :" + e);
+                      e.printStackTrace();
                         subscriber.onError(e);
                     }
                 }

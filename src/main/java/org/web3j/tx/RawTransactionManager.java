@@ -1,7 +1,9 @@
 package org.web3j.tx;
 
 import java.math.BigInteger;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.TransactionEncoder;
@@ -37,6 +39,8 @@ public class RawTransactionManager implements TransactionManager {
         this(web3j, credentials, (byte) -1);
     }
 
+//    AtomicInteger nonce = new AtomicInteger(Math.abs(new Random().nextInt()));
+    
     BigInteger getNonce() throws ExecutionException, InterruptedException {
         EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
@@ -49,6 +53,8 @@ public class RawTransactionManager implements TransactionManager {
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, BigInteger value) throws ExecutionException, InterruptedException {
 
+//        BigInteger myNonce = BigInteger.valueOf(nonce.incrementAndGet());
+//        System.out.println("myNonce:" + myNonce);
         BigInteger nonce = getNonce();
 
         RawTransaction rawTransaction = RawTransaction.createTransaction(

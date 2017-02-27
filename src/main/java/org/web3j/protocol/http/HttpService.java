@@ -1,7 +1,9 @@
 package org.web3j.protocol.http;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
-
+import org.bouncycastle.util.io.Streams;
 import org.web3j.protocol.Service;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
@@ -82,7 +84,11 @@ public class HttpService extends Service {
                 HttpEntity entity = response.getEntity();
 
                 if (entity != null) {
-                    return objectMapper.readValue(response.getEntity().getContent(), type);
+                  
+                  byte[] responseBytes = Streams.readAll(response.getEntity().getContent());
+                  System.out.println("Response :::: ");
+                  System.out.println(new String(responseBytes));
+                    return objectMapper.readValue(new ByteArrayInputStream(responseBytes), type);
                 } else {
                     return null;
                 }

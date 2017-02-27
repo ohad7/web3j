@@ -19,6 +19,7 @@ public abstract class ManagedTransaction {
 
     // https://www.reddit.com/r/ethereum/comments/5g8ia6/attention_miners_we_recommend_raising_gas_limit/
     public static final BigInteger GAS_PRICE = BigInteger.valueOf(20_000_000_000L);
+//    public static final BigInteger GAS_PRICE_HIGH = BigInteger.valueOf(60_000_000_000L);
 
     private static final int SLEEP_DURATION = 15000;
     private static final int ATTEMPTS = 40;
@@ -62,8 +63,10 @@ public abstract class ManagedTransaction {
             String to, String data, BigInteger value, BigInteger gasPrice, BigInteger gasLimit)
             throws InterruptedException, ExecutionException, TransactionTimeoutException {
 
+      System.out.println("transactionManager:" + transactionManager);
         EthSendTransaction transaction = transactionManager.executeTransaction(
                 gasPrice, gasLimit, to, data, value);
+        System.out.println("Executing transaction :" + transaction.getTransactionHash());
         return processResponse(transaction);
     }
 
@@ -95,6 +98,7 @@ public abstract class ManagedTransaction {
         for (int i = 0; i < attempts; i++) {
             if (!receiptOptional.isPresent()) {
                 Thread.sleep(sleepDuration);
+                System.out.println("Querying for:" + transactionHash);
                 receiptOptional = sendTransactionReceiptRequest(transactionHash);
             } else {
                 return receiptOptional.get();
@@ -110,6 +114,8 @@ public abstract class ManagedTransaction {
             String transactionHash) throws InterruptedException, ExecutionException {
         EthGetTransactionReceipt transactionReceipt =
                 web3j.ethGetTransactionReceipt(transactionHash).sendAsync().get();
+        
+        //System.out.println("transactionReceipt:"+transactionReceipt.);
         if (transactionReceipt.hasError()) {
             throw new RuntimeException("Error processing request: " +
                     transactionReceipt.getError().getMessage());

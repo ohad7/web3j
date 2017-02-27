@@ -47,6 +47,14 @@ public abstract class Contract extends ManagedTransaction {
         this.gasPrice = gasPrice;
         this.gasLimit = gasLimit;
     }
+    
+    public BigInteger getGasPrice() {
+      return this.gasPrice;
+    }
+    
+    public BigInteger getGasLimit() {
+      return this.gasLimit;
+    }
 
     protected Contract(String contractAddress, Web3j web3j, Credentials credentials,
                        BigInteger gasPrice, BigInteger gasLimit) {

@@ -1,7 +1,9 @@
 package org.web3j.tx;
 
 import java.math.BigInteger;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -17,6 +19,8 @@ public class ClientTransactionManager implements TransactionManager {
 
     private final Web3j web3j;
     private final String fromAddress;
+    
+    AtomicInteger nonce = new AtomicInteger(new Random().nextInt());
 
     public ClientTransactionManager(
             Web3j web3j, String fromAddress) {
@@ -30,8 +34,10 @@ public class ClientTransactionManager implements TransactionManager {
             String data, BigInteger value)
             throws ExecutionException, InterruptedException, TransactionTimeoutException {
 
+      BigInteger myNonce = BigInteger.valueOf(nonce.incrementAndGet());
+      System.out.println("myNonce:" + myNonce);
         Transaction transaction = new Transaction(
-                fromAddress, null, gasPrice, gasLimit, to, value, data);
+                fromAddress, myNonce, gasPrice, gasLimit, to, value, data);
 
         return web3j.ethSendTransaction(transaction)
                 .sendAsync().get();
